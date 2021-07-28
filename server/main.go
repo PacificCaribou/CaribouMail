@@ -7,11 +7,31 @@ import (
 	"os"
 )
 
+func createDirIfDNE(filename string) err {
+  // ensure file exists
+  fileInfo, err := os.Stat(filename)
+  if os.IsNotExist(err) {
+    // make dir if file DNE
+    err := os.Mkdir(filename, 0755)
+    if (err != nil) {
+      fmt.Println("Error: while making temp dir: ", err)
+      return
+    }
+  } else if (err != nil) {
+    fmt.Println("Error while opening temp dir: ", err)
+    return
+  } else if (! fileInfo.IsDir()) {
+    fmt.Printf("File %s is not a directory\n", fileInfo.Name())
+    return
+  }
+}
+
 func downloadHandler(w http.ResponseWriter, r *http.Request) {
   if r.Method != "GET" {
     http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
     return
   }
+
 }
 
 func uploadHandler(w http.ResponseWriter, r *http.Request) {
